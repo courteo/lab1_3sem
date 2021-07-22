@@ -371,6 +371,108 @@ public:
             d = pow(2, n) - 1;
         }
     }
+
+
+
+    void ShellSelectSort(Sorter<T> &arr, Sorter<T> &another) {
+        int length = arr.get_len();
+        int n = another.get_len() - 1;
+
+        while (n >= 0) {
+            for (int i = 0; i < length; i++)
+                for (int j = i + another[n]; j < length; j += another[n])
+                    if (arr[i] < arr[j])
+                        swap(arr[i], arr[j]);
+
+
+            n--;
+        }
+    }
+
+    class Node {
+        Node *left = nullptr;
+        Node *right = nullptr;
+        T value;
+
+        explicit Node(T value1) : value(value1) {};
+    public:
+        void add(Node *&root, T value){
+            if (root == nullptr) {
+                root = new Node(value);
+                return;
+            }
+            if (root->value < value)
+                add(root->left, value);
+            else
+                add(root->right, value);
+        }
+
+        void input(Node *&root, Sorter<T> &arr) {
+            for (int i = 0; i < arr.get_len(); i++) {
+                add(root, arr[i]);
+            }
+        }
+
+        void FromTreeToMassive(Node *&root, Sorter<T> &arr, int &i) {
+            if (root == nullptr) {
+                return;
+            }
+
+            FromTreeToMassive(root->left, arr, i);
+            arr[i] = root->value;
+            i++;
+            FromTreeToMassive(root->right, arr, i);
+        }
+
+        void Delete(Node *&root) {
+            if (root == nullptr)
+                return;
+
+            Delete(root->left);
+            Delete(root->right);
+            delete root;
+        }
+
+        void BinaryTreeSort(Sorter<T> &arr) { //O(n log n)
+            int i = 0;
+
+            Node *root = nullptr;
+            root->input(root, arr);
+            root->FromTreeToMassive(root, arr, i);
+            root->cleanTree(root);
+        }
+    };
+
+
+
+    void BuildMaxHeap (Sorter<T> &arr) {
+        for (int i = arr.get_len() / 2; i >= 0; i--)
+            Heap(arr, i);
+    }
+
+    void Heap(Sorter<T> &arr, int i) {
+        int max = i;
+        int left = 2 * i;
+        int right = 2 * i + 1;
+
+        if (left < get_len() && arr[left] > arr[i] ) max = left;
+        if (right < get_len() && arr[right] > arr[max]) max = right;
+        if (max != i) {
+            swap(arr[i], arr[max]);
+            Heap(arr, max);
+        }
+    }
+
+    void HeapSort(Sorter<T> &arr) { // O (n log n)
+        int length = arr.get_len();
+        BuildMaxHeap(arr);
+        for (int i = 0; i < length - 1; i++) {
+            swap(arr[i], arr[length - 1]);
+            Heap(arr, i);
+        }
+    }
+
+
 };
 
 template <class T>
