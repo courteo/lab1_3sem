@@ -2,10 +2,11 @@
 #ifndef PROSTO_ArraySequence_H
 #define PROSTO_ArraySequence_H
 #include "Dynamic_array.h"
+#include "sequence.h"
 #include <iostream>
 
 template<class T>
-class ArraySequence {
+class ArraySequence: public Sequence<T> {
 private:
     Dynamic_array<T> dynArr;
 public:
@@ -33,7 +34,7 @@ public:
         return this;
     }
 
-    int get_len() const{
+    int get_len(){
         return dynArr.get_len();
     }
 
@@ -46,12 +47,23 @@ public:
 
     }
 
-    ArraySequence(int count, T* items) {
+    explicit ArraySequence(int count, T* items) {
         dynArr = Dynamic_array<T>(items, count);
     }
 
-    explicit ArraySequence(const Dynamic_array<T> &array) {
+    ArraySequence(const ArraySequence<T> &array) {
         dynArr = array.dynArr;
+    }
+
+    explicit ArraySequence(Sequence<T> &sequence) {
+//        dynArr = array.dynArr; TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        for (int i = 0; i < sequence.get_len(); i++) {
+            append(sequence[i]);
+        }
+    }
+
+    explicit ArraySequence(const Dynamic_array<T> &array) {
+        dynArr = array;
     }
 
     T get_first() {
@@ -64,8 +76,9 @@ public:
         return dynArr.get_last();
     }
 
-    T &get_i(int index) const {
-        if (index < 0 || index >= get_len()) throw IndexOutOfRange(get_len(), index);
+    T get_i(int index) {
+        if (index < 0 || index >= dynArr.get_len())
+            throw IndexOutOfRange(get_len(), index);
         return dynArr.get_i(index);
     }
 
@@ -202,6 +215,14 @@ public:
             tuple->set_i(1, dar.get_i(i));
             NewArr->append(tuple);
         }
+//        for (int i = 0; i < NewArr->get_len(); i++){
+//            std::cout << '{';
+//            for (int j = 0; j < NewArr->get_i(i)->get_len(); j++){
+//                std::cout << NewArr->get_i(i)->get_i(j) << ", ";
+//            }
+//            std::cout << "\b\b}, ";
+//        }
+//        std::cout << "\b\b\n";
         return NewArr;
     }
 
@@ -215,17 +236,10 @@ public:
         }
         dynArr.resize(dynArr.get_len() - 1);
         return item;
-
     }
 
 };
 
-template <class T>
-std::ostream &operator << (std::ostream &cout, ArraySequence<T> arraySequence) {
-    for (int i = 0; i < arraySequence.get_len(); i++){
-        std::cout << arraySequence.get_i(i) << " ";
-    }
-    std::cout << "\n";
-}
+
 
 #endif //PROSTO_ArraySequence_H

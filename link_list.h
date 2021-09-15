@@ -51,6 +51,16 @@ public:
         return *this;
     }
 
+    T &operator [] (int index) {
+        if (index < 0 || index >= len) throw IndexOutOfRange(len, index);  //исключение выхода за массив
+
+        element *el = head;
+        for (int i = 0; i < index; i++) {
+            el = el->p_next;
+        }
+        return el->el;
+    }
+
     Linked_List ()
     {
         head = nullptr;
@@ -144,16 +154,7 @@ public:
     }
 
     T get_i(int index) {
-        if(index < this->get_len())
-        {
-            element *el = head;
-            for (int i = 0; i < index; i++) {
-                el = el->p_next;
-            }
-            return el->el;
-        }
-        else
-            throw IndexOutOfRange(get_len(), index);
+        return operator[](index);
     }
 
     void set_i(int index, T el) {

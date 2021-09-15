@@ -1,13 +1,13 @@
 #ifndef LAB1_3SEM_SORTER_H
 #define LAB1_3SEM_SORTER_H
+#include "sequence.h"
 #include "ArraySequence.h"
-#include "math.h"
+#include "cmath"
 
 template<class T>
 class Sorter {
-private:
-    ArraySequence<T> array;
 public:
+
     class IndexOutOfRange {
     public:
         int length;
@@ -19,131 +19,84 @@ public:
     };
 
 
-    Sorter<T> &operator = (const Sorter<T> &arraySequence) {
 
-        array = arraySequence.array;
-        return *this;
-    }
-
-    Sorter<T> &operator = (Sorter<T> *arraySequence) {
-        array = arraySequence->array;
-        return *this;
-    }
-
-    Sorter() {
-        array = ArraySequence<T>();
-    }
-
-    explicit Sorter(int size) {
-        array = ArraySequence<T>(size);
-
-    }
-
-    Sorter(int count, T *items) {
-        array = ArraySequence<T>(count,items);
-    }
-
-    explicit Sorter(const Sorter<T> &arra) {
-        array = arra.array;
-    }
-
-
-    int get_len() const {
-        return array.get_len();
-    }
-
-    T &get_i(int index) const{
-        if (index < 0 || index >= array.get_len()) throw IndexOutOfRange(get_len(), index);
-        return array.get_i(index);
-    }
-
-    void set_i(int index,T item) {
-        if (index < 0 || index >= array.get_len()) throw IndexOutOfRange(get_len(), index);
-        array.set_i(index, item);
-    }
-
-    T &operator[](int index) {
-        if (index < 0 || index >= get_len())
-            throw IndexOutOfRange(get_len(), index);
-        return array[index];
-    }
-
-    void swap(T &number1, T &number2){
+    static void swap(T &number1, T &number2){
         T temp;
         temp = number1;
         number1 = number2;
         number2 = temp;
     }
 
-    Sorter<T> *getSubSequence(Sorter<T> *arraysequence, int startIndex, int endIndex) {
-        array = arraysequence->array.getSubSequence(startIndex, endIndex);
-        return  this;
-    }
 
-    void BubbleSort(Sorter<T> &arraySequence){ //O(n^2)
-        if (arraySequence.get_len() <= 1)
-            return;
-        int size = arraySequence.get_len();
+
+    static void BubbleSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n^2)
+
+        if (sequence.get_len() <= 1)
+            return ;
+
+        //ArraySequence<T> sequence(sequence);
+
+        int size = sequence.get_len();
         T temp;
 
         for (int i = 0; i < size; i++)
             for (int j = size - 1; j > i; j--){
-                if (arraySequence.get_i(j - 1) > arraySequence.get_i(j)){
-                    swap(arraySequence.get_i(j), arraySequence.get_i(j - 1));
+                if (cmp(sequence[j], sequence[j - 1])){
+                    swap(sequence[j], sequence[j - 1]);
                 }
             }
+
+        //return sequence;
     }
 
-
-
-    void BubbleShakerSort(Sorter<T> &arraySequence){ //O(n^2)
-        if (arraySequence.get_len() <= 1)
+    static void BubbleShakerSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n^2)
+        if (sequence.get_len() <= 1)
             return;
 
         int LeftSize = 1;
-        int RightSize = arraySequence.get_len() - 1;
+        int RightSize = sequence.get_len() - 1;
 
         while (LeftSize <= RightSize){
             for (int i = RightSize; i >= LeftSize; i--)
-                if (arraySequence.get_i(i - 1) > arraySequence.get_i(i))
-                    swap(arraySequence.get_i(i - 1), arraySequence.get_i(i));
+                if (cmp(sequence[i], sequence[i - 1]))
+                    swap(sequence[i - 1], sequence[i]);
             LeftSize++;
 
 
             for (int i = LeftSize; i <= RightSize; i++)
-                if (arraySequence.get_i(i - 1) > arraySequence.get_i(i))
-                    swap(arraySequence.get_i(i), arraySequence.get_i(i - 1));
+                if (cmp(sequence[i], sequence[i - 1]))
+                    swap(sequence[i], sequence[i - 1]);
             RightSize--;
 
         }
     }
 
-    void InsertionSort(Sorter<T> &arraysequence){ // O(n^2)
-        if (arraysequence.get_len() <= 1)
+    static void InsertionSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ // O(n^2)
+        if (sequence.get_len() <= 1)
             return;
 
-        for (int i = 1; i < arraysequence.get_len(); i++){
+        for (int i = 1; i < sequence.get_len(); i++){
             int j = i - 1;
-            T temp = arraysequence.get_i(i);
-            while (arraysequence.get_i(j) > temp && j >= 0){
-                arraysequence.get_i(j + 1) = arraysequence.get_i(j);
+            T temp = sequence[i];
+            while (cmp(temp, sequence[j]) && j >= 0){
+                sequence[j + 1] = sequence[j];
                 j--;
                 if (j == -1)
                     break;
             }
-            arraysequence.get_i(j + 1) = temp;
+            sequence[j + 1] = temp;
         }
     }
 
 
-    void BinaryInsertionSort(Sorter<T> &arraysequence){ // O(n^2)
-        if (arraysequence.get_len() <= 1)
+    static void BinaryInsertionSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ // O(n^2)
+        if (sequence.get_len() <= 1)
             return;
 
-        for (int i = 0; i < arraysequence.get_len(); i++){
-            T temp = arraysequence.get_i(i);
+        for (int i = 0; i < sequence.get_len(); i++){
+            T temp = sequence[i];
             if (i > 0)
-                if (temp > arraysequence.get_i(i - 1))
+                if (cmp(sequence[i - 1], temp))
                     continue;
                 else
                 {
@@ -152,16 +105,16 @@ public:
 
                     while (left < right){
                         int mid = left + (right - left) / 2;
-                        if (temp < arraysequence.get_i(mid))
+                        if (cmp(temp,sequence[mid]))
                             right = mid;
                         else
                             left = mid + 1;
                     }
 
                     for (int j = i; j > left ; j--){
-                        arraysequence.get_i(j) = arraysequence.get_i(j - 1);
+                        sequence[j] = sequence[j - 1];
                     }
-                    arraysequence.get_i(left) = temp;
+                    sequence[left] = temp;
                 }
         }
     }
@@ -170,47 +123,47 @@ public:
 
 
 
-    void SelectionSort(Sorter<T> &arraysequence){ //O(n^2)
-        if (arraysequence.get_len() <= 1)
+    static void SelectionSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n^2)
+        if (sequence.get_len() <= 1)
             return;
 
-        for (int i = arraysequence.get_len()- 1; i >= 0; i--){
-            T max = arraysequence.get_i(0);
+        for (int i = sequence.get_len() - 1; i >= 0; i--){
+            T max = sequence[0];
             int number = 0;
             for (int j = 1; j <= i; j++){
-                if (max < arraysequence.get_i(j)){
-                    max = arraysequence.get_i(j);
+                if (cmp(max, sequence[j])){
+                    max = sequence[j];
                     number = j;
                 }
 
             }
-            swap(arraysequence->get_i(number), arraysequence->get_i(i));
-            //std::cout << *arraysequence;
+            swap(sequence[number], sequence[i]);
+            //std::cout << *sequence;
         }
     }
 
 
-    void CountingSort(Sorter<T> &arraysequence){ //O(n +k);
-        int length = arraysequence.get_len();
+    static void CountingSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n +k);
+        int length = sequence.get_len();
         if (length <= 1)
             return;
-        T min = arraysequence.get_i(0);
-        T max = arraysequence.get_i(0);
+        T min = sequence[0];
+        T max = sequence[0];
         for (int i = 0; i <length; i++){
-            if (arraysequence.get_i(i) > max)
-                max = arraysequence.get_i(i);
+            if (cmp(max,sequence[i]))
+                max = sequence[i];
 
-            if (arraysequence.get_i(i) < min)
-                min = arraysequence.get_i(i);
+            if (cmp(sequence[i], min))
+                min = sequence[i];
         }
 
-        Sorter<T> Temp(max - min + 1);
+        ArraySequence<T> Temp(max - min + 1);
         //std::cout << "asdasd   " << Temp.get_i(0) << " " << min << " " << max <<  " " << Temp.get_len() << "\n";
         for (int i = 0; i < length; i++)
             if (min <= 0)
-                Temp.get_i(arraysequence.get_i(i) + abs(min))++;
+                Temp[sequence[i] + abs(min)]++;
             else
-                Temp.get_i(arraysequence.get_i(i) - min)++;
+                Temp[sequence[i] - min]++;
 
         int current = 0;
         for (int i = min; i <= max; i++){
@@ -219,73 +172,54 @@ public:
                 k = i + abs(min);
             else
                 k = i - min;
-            for (int j = 0; j < Temp.get_i(k); j++){
-                arraysequence.get_i(current) = i;
+            for (int j = 0; j < Temp[k]; j++){
+                sequence[current] = i;
                 current++;
             }
         }
     }
 
 
-    void Merge(Sorter<T> &arraysequnce, int left, int mid, int right){
-        int ArrOne = mid - left + 1;
-        int ArrTwo = right - mid;
+    static void Merge(Sequence<T> &sequence, int left, int mid, int right, bool(*cmp)(T t1, T t2)){
+        ArraySequence<T> temp(sequence);
 
-        Sorter<T> lefttTemp(ArrOne);
-        lefttTemp.array = arraysequnce.array.getSubSequence(left, mid);
+        int start = left;
+        int last = mid + 1;
 
-        Sorter<T> rightTemp(ArrTwo);
-        rightTemp.array = arraysequnce.array.getSubSequence(mid + 1, right);
-        auto indexOfMergedArray = left;
-        auto indexOfArrOne = 0;
-        auto indexOfArrTwo = 0;
-
-        while (indexOfArrOne < ArrOne && indexOfArrTwo < ArrTwo) {
-            if (lefttTemp.get_i(indexOfArrOne) <= rightTemp.get_i(indexOfArrTwo)) {
-                arraysequnce.get_i(indexOfMergedArray) = lefttTemp.get_i(indexOfArrOne);
-                indexOfArrOne++;
+        for (int j = left; j <= right; j++)
+            if ((start <= mid) && ((last > right) || (cmp(sequence[start], sequence[last])))) {
+                temp[j] = sequence[start];
+                start++;
+            } else {
+                temp[j] = sequence[last];
+                last++;
             }
-            else {
-                arraysequnce.get_i(indexOfMergedArray) = rightTemp.get_i(indexOfArrTwo);
-                indexOfArrTwo++;
-            }
-            indexOfMergedArray++;
-        }
 
-        while (indexOfArrOne < ArrOne) {
-            arraysequnce.get_i(indexOfMergedArray) = lefttTemp.get_i(indexOfArrOne);
-            indexOfArrOne++;
-            indexOfMergedArray++;
-        }
-
-        while (indexOfArrTwo < ArrTwo) {
-            arraysequnce.get_i(indexOfMergedArray) = rightTemp.get_i(indexOfArrTwo);
-            indexOfArrTwo++;
-            indexOfMergedArray++;
-        }
+        for (int i = 0; i < temp.get_len(); i++)
+            sequence[i] = temp[i];
 
     }
+ ///TODO
 
-
-    void MergeSort(Sorter<T> &arraysequence, int begin, int end){ //O(n log n)
+    static void MergeSort(Sequence<T> &sequence, int begin, int end, bool(*cmp)(T t1, T t2)){ //O(n log n)
         if (begin >= end)
             return;
 
         auto mid = begin + (end - begin) / 2;
-        MergeSort(arraysequence, begin, mid);
-        MergeSort(arraysequence, mid + 1, end);
-        Merge(arraysequence, begin, mid, end);
+        MergeSort(sequence, begin, mid, cmp);
+        MergeSort(sequence, mid + 1, end, cmp);
+        Merge(sequence, begin, mid, end, cmp);
 
 
     }
 
 
-    void SquareSelectionSort(Sorter<T> &arraysequence){ //O(n^(3/2))
-        T max = arraysequence[0];
-        int length = arraysequence.get_len();
+    static void SquareSelectionSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n^(3/2))
+        T max = sequence[0];
+        int length = sequence.get_len();
         for (int i = 1; i < length; i++){
-            if (arraysequence[i] > max)
-                max = arraysequence[i];
+            if (cmp(max, sequence[i] ))
+                max = sequence[i];
         }
 
 
@@ -294,17 +228,16 @@ public:
 
         if (pow((double)Groups, 2) < length)
             Groups++;
-
         ArraySequence<T> result;
         ArraySequence<T> MinInGroups;
 
         for (int i = Groups * min; i < length; i += Groups) {
             min = i;
             for (int j = i + 1; j < i + Groups && j < length; j++)
-                if (arraysequence[j] < arraysequence[min])
+                if (cmp(sequence[j], sequence[min]))
                     min = j;
-            MinInGroups.append(arraysequence[min]);
-            arraysequence[min] = max;
+            MinInGroups.append(sequence[min]);
+            sequence[min] = max;
         }
 
 
@@ -321,38 +254,40 @@ public:
             int i = Groups * min;
             min = i;
             for (int j = i + 1; j < i + Groups && j < length; j++)
-                if (arraysequence[j] < arraysequence[min])
+                if (cmp(sequence[j], sequence[min]))
                     min = j;
-            MinInGroups[(i / Groups)] = arraysequence[min];
-            arraysequence[min] = max;
+            MinInGroups[(i / Groups)] = sequence[min];
+            sequence[min] = max;
         }
 
         for (int i = 0; i < length; i++)
-            arraysequence.array[i] = result[i];
+            sequence[i] = result[i];
 
 
     }
 
-    void QuickSort(Sorter<T> &arraysequence, int left, int right){ // O(n log n)
+    static void QuickSort(Sequence<T> &sequence, int left, int right, bool(*cmp)(T t1, T t2)){ // O(n log n)
         if (left < right)
         {
-            T temp = arraysequence.get_i(right);
-            int p = left;
+            T temp = sequence[right];
+            int p = left - 1;
             for (int i = left; i < right; i++) {
-                if (arraysequence.get_i(i) < temp) {
-                    swap(arraysequence.get_i(i), arraysequence.get_i(p));
+                if (cmp(sequence[i], temp)) {
                     p++;
+                    swap(sequence[i], sequence[p]);
+
                 }
             }
-            swap(arraysequence.get_i(p),arraysequence.get_i(right));
+            p++;
+            swap(sequence[p], sequence[right]);
 
-            QuickSort(arraysequence, left, p- 1);
-            QuickSort(arraysequence, p + 1, right);
+            QuickSort(sequence, left, p - 1, cmp);
+            QuickSort(sequence, p + 1, right, cmp);
         }
     }
 
 
-    void ShellSort(Sorter<T> &arr) { //O(n^2)
+    static void ShellSort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) { //O(n^2)
         int length = arr.get_len();
         int d = 1;
         int n = 0;
@@ -363,7 +298,7 @@ public:
         while (d > 0) {
             for (int i = 0; i < length; i++) {
                 for (int j = i + d; j < length; j += d) {
-                    if (arr[i] > arr[j])
+                    if (cmp(arr[j], arr[i]))
                         swap(arr[i], arr[j]);
                 }
             }
@@ -374,14 +309,14 @@ public:
 
 
 
-    void ShellSelectSort(Sorter<T> &arr, Sorter<T> &another) {
+    static void ShellSelectSort(Sequence<T> &arr, Sequence<T> &another, bool(*cmp)(T t1, T t2)) {
         int length = arr.get_len();
         int n = another.get_len() - 1;
 
         while (n >= 0) {
             for (int i = 0; i < length; i++)
                 for (int j = i + another[n]; j < length; j += another[n])
-                    if (arr[i] < arr[j])
+                    if (cmp(arr[i], arr[j]))
                         swap(arr[i], arr[j]);
 
 
@@ -396,7 +331,7 @@ public:
 
         explicit Node(T value1) : value(value1) {};
     public:
-        void add(Node *&root, T value){
+        static void add(Node *&root, T value){
             if (root == nullptr) {
                 root = new Node(value);
                 return;
@@ -407,13 +342,13 @@ public:
                 add(root->right, value);
         }
 
-        void input(Node *&root, Sorter<T> &arr) {
+        static void input(Node *&root, Sequence<T> &arr) {
             for (int i = 0; i < arr.get_len(); i++) {
                 add(root, arr[i]);
             }
         }
 
-        void FromTreeToMassive(Node *&root, Sorter<T> &arr, int &i) {
+        static void FromTreeToMassive(Node *&root, Sequence<T> &arr, int &i) {
             if (root == nullptr) {
                 return;
             }
@@ -424,7 +359,7 @@ public:
             FromTreeToMassive(root->right, arr, i);
         }
 
-        void Delete(Node *&root) {
+        static void Delete(Node *&root) {
             if (root == nullptr)
                 return;
 
@@ -433,7 +368,7 @@ public:
             delete root;
         }
 
-        void BinaryTreeSort(Sorter<T> &arr) { //O(n log n)
+        static void BinaryTreeSort(Sequence<T> &arr) { //O(n log n)
             int i = 0;
 
             Node *root = nullptr;
@@ -445,41 +380,45 @@ public:
 
 
 
-    void BuildMaxHeap (Sorter<T> &arr) {
+    static void BuildMaxHeap (Sequence<T> &arr, bool(*cmp)(T t1, T t2)) {
         for (int i = arr.get_len() / 2; i >= 0; i--)
-            Heap(arr, i);
+            Heap(arr, i, cmp);
     }
 
-    void Heap(Sorter<T> &arr, int i) {
+    static void Heap(Sequence<T> &arr, int i, bool(*cmp)(T t1, T t2)) {
         int max = i;
         int left = 2 * i;
         int right = 2 * i + 1;
 
-        if (left < get_len() && arr[left] > arr[i] ) max = left;
-        if (right < get_len() && arr[right] > arr[max]) max = right;
+        if (left < arr.get_len() && cmp(arr[i], arr[left])) max = left;
+        if (right < arr.get_len() && cmp(arr[max], arr[right])) max = right;
         if (max != i) {
             swap(arr[i], arr[max]);
-            Heap(arr, max);
+            Heap(arr, max, cmp);
+        }
+    }
+//TODO не работает
+    static void HeapSort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) { // O (n log n)
+        int length = arr.get_len();
+        BuildMaxHeap(arr, cmp);
+        for (int i = 0; i < length - 1; i++) {
+            swap(arr[i], arr[length - 1]);
+            Heap(arr, i, cmp);
         }
     }
 
-    void HeapSort(Sorter<T> &arr) { // O (n log n)
+    static void Bitonicsort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) {
         int length = arr.get_len();
-        BuildMaxHeap(arr);
-        for (int i = 0; i < length - 1; i++) {
-            swap(arr[i], arr[length - 1]);
-            Heap(arr, i);
-        }
+        for (int p = 1; p < length; p *= 2)   //почти номер этапа (максимальная длина компаратора)
+            for (int k = p; k > 0; k /= 2)    //длина мгновенного компаратора (на каком расстоянии сравниваемые элементы)
+                for (int j = k % p; j + k < length; j += 2*k)  //начальный элемент сравнения и отступ
+                    for (int i = 0; i < length - j - k; i++)     //проход по всем элмеентам
+                        if ((j + i) / (2*p) == (j + i + k) / (2*p))
+                            if (cmp( arr[j + i + k], arr[j + i] ))
+                                swap(arr[j + i] ,arr[j+i+k]);
     }
 
 
 };
 
-template <class T>
-std::ostream &operator << (std::ostream &cout, Sorter<T> &Sorter1) {
-    for (int i = 0; i < Sorter1.get_len(); i++){
-        std::cout << Sorter1.get_i(i) << " ";
-    }
-    std::cout << "\n";
-}
 #endif //LAB1_3SEM_SORTER_H

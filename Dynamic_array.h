@@ -1,5 +1,6 @@
 #ifndef PROSTO_DAR_H
 #define PROSTO_DAR_H
+#include "sequence.h"
 #include "iostream"
 
 template<class T>
@@ -21,7 +22,7 @@ public:
         IndexOutOfRange(): length(-1), index(-1) {};
     };
 
-    int get_len() const{
+    int get_len(){
         return this->len;
     }
     T &operator [] (int index) {
@@ -88,16 +89,12 @@ public:
 
 
 
-    T &get_i(int i) const {
-        if (len > i) {
-            return arr[i];
-        }
-        else
-            throw IndexOutOfRange(len, i);
+    T get_i(int i) {
+        if (get_len() <= i || i < 0)
+            throw IndexOutOfRange(get_len(), i);
+        return arr[i];
+        //////////////////////
     }
-
-
-
 
     T get_first() {
         return *(arr);
