@@ -199,7 +199,6 @@ public:
             sequence[i] = temp[i];
 
     }
- ///TODO
 
     static void MergeSort(Sequence<T> &sequence, int begin, int end, bool(*cmp)(T t1, T t2)){ //O(n log n)
         if (begin >= end)

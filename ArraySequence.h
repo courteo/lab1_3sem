@@ -56,7 +56,6 @@ public:
     }
 
     explicit ArraySequence(Sequence<T> &sequence) {
-//        dynArr = array.dynArr; TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         for (int i = 0; i < sequence.get_len(); i++) {
             append(sequence[i]);
         }
@@ -240,6 +239,12 @@ public:
 
 };
 
-
+template<class T>
+std::ostream& operator<< (std::ostream &out, ArraySequence<T> &arr){
+    for (int i = 0; i < arr.get_len(); i++){
+        std::cout << arr[i] << " ";
+    }
+    return std::cout << std::endl;
+}
 
 #endif //PROSTO_ArraySequence_H
