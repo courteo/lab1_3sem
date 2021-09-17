@@ -204,6 +204,9 @@ public:
         if (begin >= end)
             return;
 
+        if (sequence.get_len() == 0)
+            return;
+
         auto mid = begin + (end - begin) / 2;
         MergeSort(sequence, begin, mid, cmp);
         MergeSort(sequence, mid + 1, end, cmp);
@@ -216,17 +219,21 @@ public:
     static void SquareSelectionSort(Sequence<T> &sequence, bool(*cmp)(T t1, T t2)){ //O(n^(3/2))
         T max = sequence[0];
         int length = sequence.get_len();
+        if (length == 0)
+            return;
+
         for (int i = 1; i < length; i++){
             if (cmp(max, sequence[i] ))
                 max = sequence[i];
         }
 
 
-        int Groups = (int) sqrt((double) length) ;
+        int Groups = static_cast<int>(sqrt((double) length));
         int min = 0;
-
-        if (pow((double)Groups, 2) < length)
-            Groups++;
+        bool k = (Groups * Groups) >= length;
+        if ((Groups * Groups) >= length) {
+            Groups -= 1;
+        }
         ArraySequence<T> result;
         ArraySequence<T> MinInGroups;
 
@@ -261,11 +268,11 @@ public:
 
         for (int i = 0; i < length; i++)
             sequence[i] = result[i];
-
-
     }
 
     static void QuickSort(Sequence<T> &sequence, int left, int right, bool(*cmp)(T t1, T t2)){ // O(n log n)
+        if (sequence.get_len() == 0)
+            return;
         if (left < right)
         {
             T temp = sequence[right];
@@ -288,6 +295,8 @@ public:
 
     static void ShellSort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) { //O(n^2)
         int length = arr.get_len();
+        if (length == 0)
+            return;
         int d = 1;
         int n = 0;
         while (d < length) {
@@ -310,6 +319,8 @@ public:
 
     static void ShellSelectSort(Sequence<T> &arr, Sequence<T> &another, bool(*cmp)(T t1, T t2)) {
         int length = arr.get_len();
+        if (length == 0)
+            return;
         int n = another.get_len() - 1;
 
         while (n >= 0) {
@@ -399,6 +410,8 @@ public:
 //TODO не работает
     static void HeapSort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) { // O (n log n)
         int length = arr.get_len();
+        if (length == 0)
+            return;
         BuildMaxHeap(arr, cmp);
         for (int i = 0; i < length - 1; i++) {
             swap(arr[i], arr[length - 1]);
@@ -406,8 +419,10 @@ public:
         }
     }
 
-    static void Bitonicsort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) {
+    static void BitonicSort(Sequence<T> &arr, bool(*cmp)(T t1, T t2)) {
         int length = arr.get_len();
+        if (length == 0)
+            return;
         for (int p = 1; p < length; p *= 2)   //почти номер этапа (максимальная длина компаратора)
             for (int k = p; k > 0; k /= 2)    //длина мгновенного компаратора (на каком расстоянии сравниваемые элементы)
                 for (int j = k % p; j + k < length; j += 2*k)  //начальный элемент сравнения и отступ

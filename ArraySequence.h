@@ -237,6 +237,18 @@ public:
         return item;
     }
 
+    bool operator == (ArraySequence<T>& arr1){
+        if (get_len() != arr1.get_len())
+            return false;
+
+        for (int i = 0; i < arr1.get_len(); i++){
+            if (arr1[i] != operator[](i)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 };
 
 template<class T>

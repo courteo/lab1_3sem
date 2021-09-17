@@ -3,6 +3,7 @@
 #include "sequence.h"
 #include "complex"
 #include "Sorter.h"
+#include "random"
 #ifndef DAR_H_INTERFACE_H
 #define DAR_H_INTERFACE_H
 
@@ -11,6 +12,7 @@ bool cmp(T a1, T a2) {
     return a1 < a2;
 }
 
+void testFunc();
 
 void Delete(int Type, ArraySequence<ArraySequence<int>> *ArrInt,
             ArraySequence<ArraySequence<double>> *ArrDouble);
@@ -125,7 +127,7 @@ void interfaceForArray(ArraySequence<ArraySequence<int>> &ArrInt,
                 //compare(Type, &ArrInt, &ArrDouble);
                 break;
             case 6:
-                //testFunc();
+                testFunc();
                 break;
             case 7:
                 DeleteAll(Type, &ArrInt, &ArrDouble);
@@ -309,12 +311,12 @@ void Sort(int Type, ArraySequence<ArraySequence<int>> *ArrInt,
         switch (Type) {
             case 1:
                 ArrInt1 = SortType<int>(ArrInt);
-                if (sizeof(ArrInt1) != sizeof(ArraySequence<int>))
+                if (ArrInt1.get_len() != 0)
                     ArrInt->append(ArrInt1);
                 break;
             case 2:
                 ArrDouble1 = SortType<double>(ArrDouble);
-                if (sizeof(ArrDouble1) != sizeof(ArraySequence<int>))
+                if (ArrDouble1.get_len() != 0)
                     ArrDouble->append(ArrDouble1);
                 break;
             default:
@@ -359,7 +361,7 @@ ArraySequence<T> SortType(ArraySequence<ArraySequence<T>> *ArrInt){
               << "\t11 - ShellSelectSort\n"
               << "\t12 - BinaryTreeSort\n"
               << "\t13 - HeapSort\n"
-              << "\t14 - Bitonicsort\n";
+              << "\t14 - BitonicSort\n";
 
     int index22 = get_int(0,14);
     if (index22 == 0){
@@ -408,7 +410,7 @@ ArraySequence<T> SortType(ArraySequence<ArraySequence<T>> *ArrInt){
                 Sorter<T>::HeapSort(ArrTemp, cmp);
                 break;
             case 14:
-                Sorter<T>::Bitonicsort(ArrTemp, cmp);
+                Sorter<T>::BitonicSort(ArrTemp, cmp);
                 break;
         }
     return ArrTemp;
@@ -462,7 +464,7 @@ void SortTypeVoid(int Type, ArraySequence<ArraySequence<T>> *ArrInt){
               << "\t11 - ShellSelectSort\n"
               << "\t12 - BinaryTreeSort\n"
               << "\t13 - HeapSort\n"
-              << "\t14 - Bitonicsort\n";
+              << "\t14 - BitonicSort\n";
 
     int index22 = get_int(0,14);
     if (index22 == 0){
@@ -472,7 +474,7 @@ void SortTypeVoid(int Type, ArraySequence<ArraySequence<T>> *ArrInt){
 
         switch (index22){
             case 1:
-                Sorter<T>::Bitonicsort(ArrInt->operator[](index), cmp);
+                Sorter<T>::BubbleSort(ArrInt->operator[](index), cmp);
                 break;
             case 2:
                 Sorter<T>::BubbleShakerSort(ArrInt->operator[](index), cmp);
@@ -511,7 +513,7 @@ void SortTypeVoid(int Type, ArraySequence<ArraySequence<T>> *ArrInt){
                 Sorter<T>::HeapSort(ArrInt->operator[](index), cmp);
                 break;
             case 14:
-                Sorter<T>::BinaryInsertionSort(ArrInt->operator[](index), cmp);
+                Sorter<T>::BitonicSort(ArrInt->operator[](index), cmp);
                 break;
         }
 
@@ -589,6 +591,7 @@ void DeleteAll(int Type, ArraySequence<ArraySequence<int>> *ArrInt,
         std::cout << "Thanks for being with us ^-^\n";
         return;
     }
+
     switch (Type) {
         case 1:
             DeleteAllType<int>(ArrInt);
@@ -610,6 +613,126 @@ void DeleteAllType(ArraySequence<ArraySequence<T>> *ArrInt){
     for (int i = 0; i < length; i++){
         ArrInt->pop(0);
     }
+}
+
+void testFunc(){
+    ArraySequence<int> Arr;
+    int length = rand()%100000;
+
+    for (int i = 0; i < length; i++){
+        Arr.append(rand() % 1000000);
+    }
+    //std::cout << Arr;
+    ArraySequence<int> ar(Arr);
+    Sorter<int>::QuickSort(ar, 0 , ar.get_len() - 1, cmp);
+    std::cout << "qwe\n";
+    for (int i = 1; i <= 14; i++){
+        std::cout << "cxcxcxbbcx\n";
+        ArraySequence<int> arr(Arr);
+
+        std::cout << i << ": ";
+        switch (i){
+            case 1:
+                Sorter<int>::BubbleSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 2:
+                Sorter<int>::BubbleShakerSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 3:
+                Sorter<int>::InsertionSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 4:
+                Sorter<int>::BinaryInsertionSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 5:
+                Sorter<int>::SelectionSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 6:
+                Sorter<int>::CountingSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 7:
+                Sorter<int>::MergeSort(arr, 0, arr.get_len() - 1, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 8:
+                Sorter<int>::SquareSelectionSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 9:
+                Sorter<int>::QuickSort(arr, 0, arr.get_len() - 1, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 10:
+                Sorter<int>::ShellSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 11:
+                //Sorter<int>::ShellSelectSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 12:
+                //Binary
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 13:
+                Sorter<int>::HeapSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+            case 14:
+                Sorter<int>::BitonicSort(arr, cmp);
+                if (ar == arr)
+                    std::cout << "Ohhh, It's actually working, my friend\n";
+                else
+                    std::cout << "What is a duuuude, you can not create normal sort\n";
+                break;
+        }
+    }
+
 }
 #endif //DAR_H_INTERFACE_H
 
