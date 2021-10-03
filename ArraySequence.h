@@ -106,6 +106,14 @@ public:
         return newArr;
     }
 
+    ArraySequence<T>* clone(){
+        return new ArraySequence<T>(*this);
+    }
+
+    ArraySequence<T>* empty(){
+        return new ArraySequence<T>();
+    }
+
     void append(T item){
         dynArr.resize(dynArr.get_len() + 1);
         dynArr.set_i(get_len() - 1, item);

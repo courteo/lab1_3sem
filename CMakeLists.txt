@@ -13,4 +13,6 @@ add_executable(Dude
         sequence.h
         interfaceBoth.h
         interfaceForArray.h
+        interfaceForLink.h
+        timer.h
         )

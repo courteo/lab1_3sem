@@ -3,6 +3,7 @@
 #include "ArraySequence.h"
 #include "linkseq.h"
 #include "interfaceForArray.h"
+#include "interfaceForLink.h"
 #include "complex"
 
 
@@ -18,6 +19,8 @@ void interface() {
 
     ArraySequence<ArraySequence<int>> ArrInt;
     ArraySequence<ArraySequence<double>> ArrDouble;
+    LinkedSequence<LinkedSequence<int>> LinkInt;
+    LinkedSequence<LinkedSequence<double>> LinkDouble;
     while (true) {
 
         int DateStruct = get_struct();
@@ -32,7 +35,7 @@ void interface() {
                 interfaceForArray(ArrInt, ArrDouble);
                 break;
             case 2:
-                //interfaceForLinked();
+                interfaceForLinked(LinkInt,LinkDouble);
                 break;
         }
     }

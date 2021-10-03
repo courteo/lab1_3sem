@@ -44,6 +44,9 @@ public:
         return *this;
     }
 
+
+
+
     Linked_List<T>& operator = (Linked_List<T> *linkedList) {
         Delete();
         for (element *elem = linkedList->head; elem; append(elem->el), elem = elem->p_next);
@@ -97,6 +100,8 @@ public:
         this->end = t2;
     }
 
+//    Linked_List ()
+
     Linked_List (const Linked_List <T>& other)
     {
         int size = other.get_len();
@@ -119,6 +124,28 @@ public:
             t1 = nullptr;
         }
         this->end = t2;
+    }
+
+    Linked_List (int count, T* items){
+        element* t1 = nullptr;
+        element* t2 = nullptr;
+        this->head = new element;
+        this->end = new element;
+        this->set_len(count);
+        this->head->el = items[0];
+        this->head->p_next = nullptr;
+        t2 = this->head;
+        for(int i = 1;i < count;i++)
+        {
+            t1 = new element;
+            t1->el = items[i];
+            t1->p_next = nullptr;
+            t2->p_next = t1;
+            t2 = t1;
+            t1 = nullptr;
+        }
+        this->end = t2;
+
     }
 
     ~Linked_List()

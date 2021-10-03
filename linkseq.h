@@ -43,8 +43,12 @@ public:
         Llst = Linked_List<T>();
     }
 
-    LinkedSequence(int size){
+    explicit LinkedSequence(int size){
         Llst = Linked_List<T>(size);
+    }
+
+    explicit LinkedSequence(int count, T* items){
+        Llst = Linked_List<T>(count, items);
     }
 
     LinkedSequence(const LinkedSequence<T> &list){
@@ -57,7 +61,7 @@ public:
         }
     }
 
-    LinkedSequence(const Linked_List<T> &list){
+    explicit LinkedSequence(const Linked_List<T> &list){
         Llst = list;
     }
 
@@ -97,6 +101,13 @@ public:
         return NewLst;
     }
 
+    LinkedSequence<T>* clone(){
+        return new LinkedSequence<T>(*this);
+    }
+
+    LinkedSequence<T>* empty(){
+        return new LinkedSequence<T>();
+    }
     void append(T item){
         Llst.append(item);
     }
@@ -165,5 +176,39 @@ public:
         return NewLst;
     }
 
+
+
+    T pop(int index) {
+        if (index < 0 || index >= Llst.get_len())
+            throw IndexOutOfRange(Llst.get_len(), index);
+
+        T item = Llst[index];
+        for (int i = index; i < Llst.get_len() - 1; i++) {
+            set_i(i, Llst.get_i(i+1));
+        }
+//        Llst.get_i(Llst.get_len() - 2);
+        return item;
+    }
+
+    bool operator == (LinkedSequence<T>& arr1){
+        if (get_len() != arr1.get_len())
+            return false;
+
+        for (int i = 0; i < arr1.get_len(); i++){
+            if (arr1[i] != operator[](i)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 };
+
+template<class T>
+std::ostream & operator << (std::ostream &out, LinkedSequence<T> link){
+    for (int i = 0; i < link.get_len(); i++){
+        std::cout << link[i] << " ";
+    }
+    return std::cout << std::endl;
+}
 #endif //PROSTO_LinkedSequence_H
