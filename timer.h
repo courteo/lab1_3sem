@@ -5,7 +5,7 @@
 
 class Timer {
 private:
-    std::chrono::system_clock::time_point Start_Time;
+    std::chrono::time_point<std::chrono::high_resolution_clock> Start_Time;
 public:
     void Start()
     {
@@ -13,8 +13,7 @@ public:
     }
     float GetDuration()
     {
-        std::chrono::duration<float, std::micro> duration = std::chrono::high_resolution_clock::now() - Start_Time;
-        return duration.count();
+        return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(std::chrono::high_resolution_clock::now() - Start_Time).count();
     }
 };
 
