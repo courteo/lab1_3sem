@@ -10,6 +10,8 @@ template<class T>
 bool cmp1(T a1, T a2) {
     return a1 < a2;
 }
+double GetSortTime(int index2, LinkedSequence<double>& arr1);
+void Compare();
 
 void testFuncLinked(int Type);
 
@@ -82,7 +84,7 @@ void interfaceForLinked(LinkedSequence<LinkedSequence<int>> &ArrInt,
                 Sort(Type, &ArrInt, &ArrDouble);
                 break;
             case 5:
-                //compare(Type, &ArrInt, &ArrDouble);
+                Compare();
                 break;
             case 6:
                 testFuncLinked(Type);
@@ -776,6 +778,134 @@ void testFuncLinked(int Type){
     }
 
 }
+
+
+void Compare(){
+
+    std::cout << "Can you choose 2 certain sorts:\n"
+              << "\t0 - exit\n"
+              << "\t1 - BubbleSort\n"
+              << "\t2 - BubbleShakerSort\n"
+              << "\t3 - InsertionSort\n"
+              << "\t4 - BinaryInsertionSort\n"
+              << "\t5 - SelectionSort\n"
+              << "\t6 - CountingSort\n"
+              << "\t7 - MergeSort\n"
+              << "\t8 - QuickSort\n"
+              << "\t9 - ShellSort\n"
+              << "\t10 - ShellSelectSort\n"
+              << "\t11 - BinaryTreeSort\n"
+              << "\t12 - HeapSort\n";
+
+    std::string Name_sorts[12] = {"BubbleSort", "BubbleShakerSort", "InsertionSort", "BinaryInsertionSort", "SelectionSort", "CountingSort",
+                                  "MergeSort", "QuickSort", "ShellSort", "ShellSelectSort", "BinaryTreeSort", "HeapSort"};
+
+    int index1 = get_int(0,12);
+    if (index1 == 0){
+        std::cout << "Thanks for being with us ^-^\n";
+        return;
+    }
+
+    int index2 = get_int(0,12);
+    if (index2 == 0){
+        std::cout << "Thanks for being with us ^-^\n";
+        return;
+    }
+
+    while (true){
+        if (index2 == index1){
+            std::cout << "Ooops, can you rechoose sort\n";
+            index2 = get_int(0, 12);
+        }
+        else
+            break;
+    }
+
+
+    std::cout << "Please, choose count of number from 10 to 100\n";
+    int length = get_int(10, 100);
+
+    LinkedSequence<double> arr;
+
+
+    for (int i = 0; i < length; i++){
+        arr.append(rand() % 1000000);
+    }
+
+    LinkedSequence<double> arr1(arr);
+
+    auto time1 = GetSortTime(index1, arr);
+    auto time2 = GetSortTime(index2, arr1);
+
+    std::cout << Name_sorts[index1 - 1];
+    for (int i = 0; i < 8; i++)
+        std::cout << " ";
+    std::cout << Name_sorts[index2 - 1] << '\n';
+
+    std::cout << time1 << " microseconds            " << time2 <<" microseconds\n";
+}
+
+
+double GetSortTime(int index2, LinkedSequence<double>& arr1){
+
+    Timer sort2;
+    double time2;
+    double array1[] = {9, 5, 3, 8,4, 1};
+    LinkedSequence<double> arra1(6, array1);
+    switch (index2){
+        case 1:
+            sort2.Start();
+            //std::cout << sort2.GetDuration() << '\n';
+            Sorter<double>::BubbleSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 2:
+            sort2.Start();
+            Sorter<double>::BubbleShakerSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 3:
+            sort2.Start();
+            Sorter<double>::InsertionSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 4:
+            sort2.Start();
+            Sorter<double>::BinaryInsertionSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 5:
+            sort2.Start();
+            Sorter<double>::SelectionSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 6:
+            sort2.Start();
+            Sorter<double>::CountingSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 7:
+            sort2.Start();
+            Sorter<double>::MergeSort(arr1, 0, arr1.get_len() - 1, cmp);
+            return sort2.GetDuration();
+        case 8:
+            sort2.Start();
+            Sorter<double>::QuickSort(arr1, 0, arr1.get_len() - 1, cmp);
+            return sort2.GetDuration();
+        case 9:
+            sort2.Start();
+            Sorter<double>::ShellSort(arr1, cmp);
+            return sort2.GetDuration();
+        case 10:
+            sort2.Start();
+            Sorter<double>::ShellSelectSort(arr1, arra1, cmp);
+            return sort2.GetDuration();
+        case 11:
+            sort2.Start();
+            Sorter<double>::Node::BinaryTreeSort(arr1);
+            time2 = sort2.GetDuration();
+            break;
+        case 12:
+            sort2.Start();
+            Sorter<double>::HeapSort(arr1, arr1.get_len() , cmp);
+            return sort2.GetDuration();
+    }
+}
+
 
 
 

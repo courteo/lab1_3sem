@@ -852,7 +852,7 @@ void compare(){
         std::cout << "Thanks for being with us ^-^\n";
         return;
     }
-/*
+
     while (true){
         if (index2 == index1){
             std::cout << "Ooops, can you rechoose sort\n";
@@ -861,7 +861,7 @@ void compare(){
         else
             break;
     }
-*/
+
 
     std::cout << "Please, choose count of number from 10 to 100\n";
     int length = get_int(10, 100);

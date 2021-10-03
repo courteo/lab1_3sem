@@ -11,9 +11,9 @@ public:
     {
         Start_Time = std::chrono::high_resolution_clock::now();
     }
-    float GetDuration()
+    double GetDuration()
     {
-        return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(std::chrono::high_resolution_clock::now() - Start_Time).count();
+        return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1, 1000000>>>(std::chrono::high_resolution_clock::now() - Start_Time).count();
     }
 };
 
