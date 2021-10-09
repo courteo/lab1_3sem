@@ -792,7 +792,7 @@ void testFunc(int Type){
                     if (ar1 == arr1)
                         std::cout << "Ohhh, It's actually working, my friend\n";
                     else
-                        std::cout << "What is a duuuude, you can not create normal sort\n";
+                        std::cout << "Wassup, duuuude, you can not create normal sort\n";
                     break;
                 case 10:
                     Sorter<double>::ShellSelectSort(arr1, arra1, cmp);

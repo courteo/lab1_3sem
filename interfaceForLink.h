@@ -855,7 +855,7 @@ double GetSortTime(int index2, LinkedSequence<double>& arr1){
     switch (index2){
         case 1:
             sort2.Start();
-            //std::cout << sort2.GetDuration() << '\n';
+
             Sorter<double>::BubbleSort(arr1, cmp);
             return sort2.GetDuration();
         case 2:
